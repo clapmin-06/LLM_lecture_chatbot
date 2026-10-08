@@ -1,27 +1,22 @@
-# 모아 AI 챗봇
+﻿# 모아 AI 챗봇
 
-HTML, CSS, JavaScript와 Express로 만든 간단한 대화형 챗봇입니다. OpenAI `gpt-4o-mini`를 사용하며, 현재 탭을 새로고침하기 전까지 대화 맥락을 브라우저 메모리에 보관합니다. 데이터베이스는 사용하지 않습니다.
+HTML, CSS, JavaScript와 Express로 만든 대화형 챗봇입니다. OpenAI `gpt-4o-mini`를 사용하며, 대화 맥락은 브라우저 메모리에만 유지합니다. 새로고침하면 대화가 초기화됩니다.
 
 ## 로컬 실행
 
-1. Node.js 18 이상을 준비합니다.
-2. `.env.example`을 복사해 `.env` 파일을 만들고 API 키를 설정합니다. `.env`는 Git에서 제외됩니다.
+필요한 버전은 Node.js 24입니다. `.env.example`을 복사해 `.env`를 만들고 `OPENAI_API_KEY`를 설정한 다음 실행하세요.
 
-   ```env
-   OPENAI_API_KEY=your_api_key
-   ```
+```bash
+npm install
+npm start
+```
 
-3. 의존성을 설치하고 서버를 실행합니다.
-
-   ```bash
-   npm install
-   npm start
-   ```
-
-4. 브라우저에서 `http://localhost:3000`을 엽니다.
+브라우저에서 `http://localhost:3000`을 엽니다.
 
 ## Vercel 배포
 
-프로젝트를 Vercel에 가져온 뒤 Project Settings → Environment Variables에 `OPENAI_API_KEY`를 추가하고 배포합니다. 프레임워크 프리셋은 Other로 두어도 됩니다. `vercel.json`이 Express 앱에 페이지와 API 요청을 연결합니다.
+GitHub 저장소를 Vercel 프로젝트로 가져오면 Express 앱을 자동 감지해 배포합니다. Root Directory는 저장소 루트로 두고, 별도의 Build Command나 Output Directory는 지정하지 않아도 됩니다. Project Settings → Environment Variables에 `OPENAI_API_KEY`를 설정한 뒤 배포하세요.
 
-대화 내역은 클라이언트 메모리에만 있으며 요청마다 최근 메시지를 API로 전송합니다. 서버 로그에는 API 오류 요약만 기록하고 대화 내용은 기록하지 않습니다.
+`server.js`가 Vercel에서 Express 앱 진입점으로 사용되고, `public/`의 프런트엔드 파일은 정적 자산으로 제공됩니다. 로컬 실행은 `local.js`에서 Express 앱을 포트에 연결합니다. `/api/health`로 서버 상태를 확인할 수 있습니다.
+
+대화 기록은 브라우저에만 저장되고 서버는 요청 때 전달된 최근 대화 내용을 OpenAI에 보냅니다. API 키는 백엔드에서만 사용됩니다.
